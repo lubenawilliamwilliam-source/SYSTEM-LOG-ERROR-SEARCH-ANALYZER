@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Log Keyword Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        input, button {
+            padding: 8px;
+            margin: 5px;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        #output {
+            margin-top: 15px;
+            background: #f8f8f8;
+            padding: 10px;
+            border: 1px solid #ddd;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .count {
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>System Log Keyword Search</h2>
+
+    <input type="file" id="fileInput">
+    <br>
+
+    <input type="text" id="keyword" placeholder="Enter keyword to search">
+    <button onclick="searchLog()">Search</button>
+
+    <div class="count" id="count"></div>
+    <div id="output"></div>
+</div>
+
+<script>
+let logText = "";
+
+document.getElementById("fileInput").addEventListener("change", function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        logText = e.target.result;
+    };
+    reader.readAsText(file);
+});
+
+function searchLog() {
+    if (!logText) {
+        alert("Please upload a log file first.");
+        return;
+    }
+
+    const keyword = document.getElementById("keyword").value.trim();
+    if (!keyword) {
+        alert("Please enter a keyword.");
+        return;
+    }
+
+    const lines = logText.split("\n");
+    let results = [];
+
+    lines.forEach(line => {
+        if (line.toLowerCase().includes(keyword.toLowerCase())) {
+            results.push(line);
+        }
+    });
+
+    document.getElementById("count").innerText =
+        "Total Matches: " + results.length;
+
+    document.getElementById("output").innerText =
+        results.length > 0 ? results.join("\n") : "No matches found.";
+}
+</script>
+
+</body>
+</html>
